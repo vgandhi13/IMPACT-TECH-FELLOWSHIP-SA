@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
 import Grid from "@mui/material/Unstable_Grid2";
-import { Select, Typography } from "@mui/material";
+import { Select, Typography, MenuItem } from "@mui/material";
 /**
  * You will find globals from this file useful!
  */
-import {} from "./globals";
+import {MY_BU_ID, BASE_API_URL, GET_DEFAULT_HEADERS} from "./globals";
 import { IUniversityClass } from "./types/api_types";
+import { dummyData, GradeTable } from "./components/GradeTable";
+import { log } from "console";
 
 function App() {
   // You will need to use more of these!
@@ -34,6 +36,30 @@ function App() {
     console.log(json);
   };
 
+  useEffect(() => {
+    const fetchClassListData = async () => {
+      try {
+        const res = await fetch(BASE_API_URL +"/class/listBySemester/fall2022?buid=" + MY_BU_ID, {
+          method: "GET",
+          headers: GET_DEFAULT_HEADERS()
+        });
+        const json: IUniversityClass[] = await res.json()
+        setClassList(json);
+        console.log(json);  
+      }
+      catch(err) {
+        console.log(err); 
+      }
+    }
+  
+    fetchClassListData();
+  }, [])
+
+  // useEffect(() => {
+  //   console.log("finally done", classList);
+    
+  // }, [classList])
+
   return (
     <div style={{ width: "100vw", height: "100vh" }}>
       <Grid container spacing={2} style={{ padding: "1rem" }}>
@@ -46,17 +72,22 @@ function App() {
           <Typography variant="h4" gutterBottom>
             Select a class
           </Typography>
+
           <div style={{ width: "100%" }}>
-            <Select fullWidth={true} label="Class">
-              {/* You'll need to place some code here to generate the list of items in the selection */}
-            </Select>
+            {classList.length>0 && 
+            <Select fullWidth={true} label="Class" value={currClassId} onChange={(event: any) => setCurrClassId(event.target.value)}>
+              {/* To write this code, I referenced https://mui.com/material-ui/react-select/ */}
+              {classList.map(curClass => <MenuItem key={curClass.classId} value={curClass.classId}>{curClass.title}</MenuItem>)}
+            </Select>}
           </div>
+
         </Grid>
         <Grid xs={12} md={8}>
           <Typography variant="h4" gutterBottom>
             Final Grades
           </Typography>
-          <div>Place the grade table here</div>
+          {/* <div>Place the grade table here</div> */}
+          <GradeTable></GradeTable>
         </Grid>
       </Grid>
     </div>
