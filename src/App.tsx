@@ -7,7 +7,6 @@ import { Select, Typography, MenuItem } from "@mui/material";
 import {MY_BU_ID, BASE_API_URL, GET_DEFAULT_HEADERS} from "./globals";
 import { IUniversityClass } from "./types/api_types";
 import { dummyData, GradeTable } from "./components/GradeTable";
-import { log } from "console";
 
 function App() {
   // You will need to use more of these!
@@ -28,14 +27,18 @@ function App() {
    * You will also need to explore the use of async/await.
    *
    */
-  const fetchSomeData = async () => {
-    const res = await fetch("https://cat-fact.herokuapp.com/facts/", {
-      method: "GET",
-    });
-    const json = await res.json();
-    console.log(json);
-  };
+  // const fetchSomeData = async () => {
+  //   const res = await fetch("https://cat-fact.herokuapp.com/facts/", {
+  //     method: "GET",
+  //   });
+  //   const json = await res.json();
+  //   console.log(json);
+  // };
 
+  /**
+   * On initial mount, this component fetches the class list for fall2022 semeseter
+   *
+   */
   useEffect(() => {
     const fetchClassListData = async () => {
       try {
@@ -43,22 +46,17 @@ function App() {
           method: "GET",
           headers: GET_DEFAULT_HEADERS()
         });
-        const json: IUniversityClass[] = await res.json()
-        setClassList(json);
-        console.log(json);  
+        const json: IUniversityClass[] = await res.json();
+        setClassList(json);  //update use state hook
+        // console.log(json);  
       }
-      catch(err) {
+      catch(err: any) {
         console.log(err); 
       }
     }
   
     fetchClassListData();
   }, [])
-
-  // useEffect(() => {
-  //   console.log("finally done", classList);
-    
-  // }, [classList])
 
   return (
     <div style={{ width: "100vw", height: "100vh" }}>
@@ -74,6 +72,7 @@ function App() {
           </Typography>
 
           <div style={{ width: "100%" }}>
+            {/* if classList has been updated after initial mount render, only then below code executed*/}
             {classList.length>0 && 
             <Select fullWidth={true} label="Class" value={currClassId} onChange={(event: any) => setCurrClassId(event.target.value)}>
               {/* To write this code, I referenced https://mui.com/material-ui/react-select/ */}
@@ -87,7 +86,8 @@ function App() {
             Final Grades
           </Typography>
           {/* <div>Place the grade table here</div> */}
-          <GradeTable></GradeTable>
+          {/* if curClassId has been updated after class selection by user, only then below code executed*/}
+          {currClassId != "" && <GradeTable currClassId={currClassId}></GradeTable>}
         </Grid>
       </Grid>
     </div>
