@@ -15,3 +15,15 @@ export const GET_DEFAULT_HEADERS = (): Headers => {  //converted to ts code
   // If you do not, the API will reject your request (:
   return headers;
 };
+
+/**
+ * The data structure that has a list of student and their final grade. Used in calculate_grade.ts, and GradeTable.tsx
+ */
+export type StudentFinalGradeMapping = {
+  id: string,  //student id, just named id for mui table purposes
+  studentName: string,
+  classId: string,
+  className: string,
+  semester: string,
+  finalGrade: number
+}
