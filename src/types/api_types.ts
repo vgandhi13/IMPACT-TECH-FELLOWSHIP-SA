@@ -17,3 +17,33 @@ export interface IUniversityClass {
   status: string;
   semester: string;
 }
+
+/**
+ * This represents an assignment as returned by the API
+ */
+export interface IClassAssignment {
+  assignmentId: string;
+  classId:	string;
+  date:	string;
+  weight: number;
+}
+
+/**
+ * This represents a student as returned by the API
+ */
+export interface IStudent {
+  dateEnrolled:	string;
+  name:	string;
+  status:	string;
+  universityId:	string;
+}
+
+/**
+ * This represents a student's class grades as returned by the API
+ */
+export interface IClassGrades {
+  classId:	string;
+  grades: any;
+  name:	string;
+  studentId:	string;
+}
